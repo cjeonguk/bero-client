@@ -1,5 +1,7 @@
 import asyncio
 import logging
+import yaml
+from pathlib import Path
 from bleak import BleakScanner
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
@@ -9,6 +11,30 @@ from config import SCAN_INTERVAL
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+home_path = Path.home()
+
+config_path = home_path / ".beroconf.yaml"
+
+if config_path.exists():
+    with open(config_path, "r") as config_file:
+        config = yaml.safe_load(config_file)
+
+    classroom = config["classroom"]
+
+    is_changed = input("교실 정보가 변경되었나요? (Y/n, 기본값: n): ")
+    if is_changed.lower() == "y":
+        classroom = input("설치된 교실 정보를 입력해주세요: ")
+        config = {"classroom": classroom}
+        with open(config_path, "w") as config_file:
+            yaml.dump(config, config_file, default_flow_style=False)
+
+else:
+    classroom = input("설치된 교실 정보를 입력해주세요: ")
+    config = {"classroom": classroom}
+
+    with open(config_path, "w") as config_file:
+        yaml.dump(config, config_file, default_flow_style=False)
 
 
 class BLEScanner:
@@ -43,6 +69,7 @@ class BLEScanner:
                             device_name=device.name,
                             device_id=device.address,
                             rssi=current_rssi,
+                            classroom=classroom,
                         )
                         # pass
             except Exception as e:
