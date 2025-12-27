@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 from config import MAX_RETRY_ATTEMPTS, API_ENDPOINT, RETRY_DELAY
 # from typing import Dict, Any
+import asyncio
 
 
 logging.basicConfig(level=logging.INFO)
