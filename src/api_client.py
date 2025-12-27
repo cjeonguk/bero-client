@@ -1,6 +1,7 @@
 import httpx
 import logging
 from datetime import datetime
+from config import MAX_RETRY_ATTEMPTS, API_ENDPOINT, RETRY_DELAY
 # from typing import Dict, Any
 
 
@@ -20,19 +21,19 @@ class APIClient:
     ) -> bool:
         """감지된 BLE 장치 정보를 API 서버로 전송"""
         data = {
-            "device_id": device_id,
+            "deviceID": device_id,
             "rssi": rssi,
-            "device_name": device_name,
+            "deviceName": device_name,
             "timestamp": datetime.now().isoformat(),
             "classroom": classroom,
         }
 
         # API 서버로의 요청을 임시로 비활성화하고 로그만 출력
-        logger.info(f"[임시모드] 장치 감지 데이터: {data}")
-        return True
+        # logger.info(f"[임시모드] 장치 감지 데이터: {data}")
+        # return True
 
         # 아래 코드는 실제 API 서버 연결이 필요할 때 주석 해제
-        """
+        
         for attempt in range(MAX_RETRY_ATTEMPTS):
             try:
                 # TODO: API 엔드포인트 및 요청 형식은 실제 서버 스펙에 맞게 수정 필요
@@ -60,4 +61,3 @@ class APIClient:
         
         logger.error(f"최대 재시도 횟수 초과: {device_id}")
         return False
-        """
