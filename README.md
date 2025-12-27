@@ -1,5 +1,7 @@
 # BLE Scanner
 
+[![Build and Release](https://github.com/cjeonguk/bero-client/actions/workflows/build.yml/badge.svg)](https://github.com/cjeonguk/bero-client/actions/workflows/build.yml)
+
 BLE 장치를 스캔하고 감지된 장치의 정보를 중앙 API 서버로 전송하는 서비스입니다.
 
 ## 요구사항
