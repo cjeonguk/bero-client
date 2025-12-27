@@ -37,10 +37,10 @@ class APIClient:
         
         for attempt in range(MAX_RETRY_ATTEMPTS):
             try:
-                # TODO: API 엔드포인트 및 요청 형식은 실제 서버 스펙에 맞게 수정 필요
                 response = await self.client.post(API_ENDPOINT, json=data)
                 response.raise_for_status()
                 logger.info(f"장치 감지 데이터 전송 성공: {device_id}")
+                logger.info(response.text)
                 return True
                 
             except httpx.ConnectError as e:
