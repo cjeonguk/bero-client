@@ -43,6 +43,7 @@ class BLEScanner:
         self.is_scanning = False
 
     async def scan_devices(self):
+        TAEGET_SERVICE_UUID = "ffd83536-93c8-466a-9d40-fbde591ca666"
         """BLE 장치 스캔 및 감지된 장치 정보 전송"""
         logger.info("BLE 스캔 시작")
         self.is_scanning = True
@@ -58,19 +59,26 @@ class BLEScanner:
                         and adv_data
                         and adv_data.rssi is not None
                         and device.name is not None
+                        and TAEGET_SERVICE_UUID in adv_data.service_uuids
                     ):
                         current_rssi = adv_data.rssi
 
+                        mac_last_4 = device.address.replace(":", "").upper()[-8:]
+
+                        service_data = adv_data.service_data.get(TAEGET_SERVICE_UUID)
+                        service_data_hex = service_data.hex().upper() if service_data else ""
+
                         # API 전송 전 로그 (실제 전송되는 값 확인용)
-                        logger.info(
-                            f"  API 전송 예정: device_name='{device.name}', device_id='{device.address}', rssi={current_rssi}, service_uuids={adv_data.service_uuids}, service_data={adv_data.service_data}"
-                        )
-                        await self.api_client.send_device_detection(
-                            device_name=device.name,
-                            device_id=device.address,
-                            rssi=current_rssi,
-                            classroom=classroom,
-                        )
+                        # logger.info(
+                            # f"  API 전송 예정: device_name='{device.name}', device_id='{device.address}', rssi={current_rssi}, service_uuids={adv_data.service_uuids}, service_data={adv_data.service_data}"
+                        # )
+                        if service_data_hex == mac_last_4:
+                            await self.api_client.send_device_detection(
+                                device_name=device.name,
+                                device_id=service_data_hex,
+                                rssi=current_rssi,
+                                classroom=classroom,
+                            )
                         # pass
             except Exception as e:
                 logger.error(f"스캔 중 오류 발생: {str(e)}")
