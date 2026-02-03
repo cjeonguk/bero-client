@@ -57,17 +57,20 @@ class BLEScanner:
                         device.address
                         and adv_data
                         and adv_data.rssi is not None
-                        and device.name is not None
+                        and device.name == "BeRo-C6"
                     ):
                         current_rssi = adv_data.rssi
+                        man_data = adv_data.manufacturer_data
+                        raw = man_data[65535]
+                        tag_id = int.from_bytes(raw[2:6], "little")
 
                         # API 전송 전 로그 (실제 전송되는 값 확인용)
                         logger.info(
-                            f"  API 전송 예정: device_name='{device.name}', device_id='{device.address}', rssi={current_rssi}, service_uuids={adv_data.service_uuids}, service_data={adv_data.service_data}"
+                            f"  API 전송 예정: device_name='{device.name}', device_id='{device.address}', rssi={current_rssi}, tag_id={tag_id}"
                         )
                         await self.api_client.send_device_detection(
                             device_name=device.name,
-                            device_id=device.address,
+                            device_id=str(tag_id),
                             rssi=current_rssi,
                             classroom=classroom,
                         )
