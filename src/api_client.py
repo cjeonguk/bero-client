@@ -1,9 +1,7 @@
 import httpx
 import logging
 from datetime import datetime
-from config import MAX_RETRY_ATTEMPTS, API_ENDPOINT, RETRY_DELAY
 # from typing import Dict, Any
-import asyncio
 
 
 logging.basicConfig(level=logging.INFO)
@@ -30,11 +28,12 @@ class APIClient:
         }
 
         # API 서버로의 요청을 임시로 비활성화하고 로그만 출력
-        # logger.info(f"[임시모드] 장치 감지 데이터: {data}")
-        # return True
+        logger.info(f"[임시모드] 장치 감지 데이터: {data}")
+        return True
 
         # 아래 코드는 실제 API 서버 연결이 필요할 때 주석 해제
-        
+       
+        """
         for attempt in range(MAX_RETRY_ATTEMPTS):
             try:
                 response = await self.client.post(API_ENDPOINT, json=data)
@@ -62,3 +61,4 @@ class APIClient:
         
         logger.error(f"최대 재시도 횟수 초과: {device_id}")
         return False
+        """
