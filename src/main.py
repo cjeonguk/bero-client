@@ -47,6 +47,7 @@ class BLEScanner:
         logger.info("BLE 스캔 시작")
         self.is_scanning = True
 
+        items = []
         while self.is_scanning:
             try:
                 discovered_items = await BleakScanner.discover(
@@ -66,14 +67,20 @@ class BLEScanner:
 
                         # API 전송 전 로그 (실제 전송되는 값 확인용)
                         logger.info(
-                            f"  API 전송 예정: device_name='{device.name}', device_id='{device.address}', rssi={current_rssi}, tag_id={tag_id}"
+                            f"  API 전송 예정: device_name='{device.name}', device_address='{device.address}', rssi={current_rssi}, tag_id={tag_id}"
                         )
-                        await self.api_client.send_device_detection(
-                            device_name=device.name,
-                            device_id=str(tag_id),
-                            rssi=current_rssi,
-                            classroom=classroom,
-                        )
+                        items.append({'device_address': device.address, 'rssi': current_rssi})
+                        count = sum(1 for item in items if item.get("device_address") == device.address)
+                        if count >= 5:
+                            filtered = [item["rssi"] for item in items if item.get("device_address") == device.address]
+                            avg_rssi = int(sum(filtered) / len(filtered))
+                            items = [item for item in items if item.get("device_address") != device.address]
+                            await self.api_client.send_device_detection(
+                                device_name=device.name,
+                                device_id=str(tag_id),
+                                rssi=avg_rssi,
+                                classroom=classroom,
+                            )
                         # pass
             except Exception as e:
                 logger.error(f"스캔 중 오류 발생: {str(e)}")
