@@ -21,6 +21,7 @@ uv sync --locked
 
 ```env
 API_BASE_URL=localhost:5173
+API_AUTH_TOKEN=your-token
 SCAN_INTERVAL=1
 MAX_RETRY_ATTEMPTS=3
 RETRY_DELAY=1

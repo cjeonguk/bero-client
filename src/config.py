@@ -8,6 +8,7 @@ load_dotenv()
 # TODO: 실제 중앙 API 서버 엔드포인트로 변경 필요
 API_BASE_URL = os.getenv("API_BASE_URL", "https://bero-dev.netlify.app")
 API_ENDPOINT = f"{API_BASE_URL}/api"
+API_AUTH_TOKEN = os.getenv("API_AUTH_TOKEN", "")
 
 # BLE 스캐너 설정
 SCAN_INTERVAL = int(os.getenv("SCAN_INTERVAL", "1"))  # 초 단위
