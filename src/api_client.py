@@ -18,7 +18,7 @@ class APIClient:
         await self.client.aclose()
 
     async def send_device_detection(
-        self, device_id: str, rssi: int, device_name: str, classroom: str
+        self, device_id: str, rssi: int, device_name: str, client_id: str
     ) -> bool:
         """감지된 BLE 장치 정보를 API 서버로 전송"""
         if not API_AUTH_TOKEN:
@@ -30,7 +30,7 @@ class APIClient:
             "rssi": rssi,
             "deviceName": device_name,
             "timestamp": datetime.now().isoformat(),
-            "classroom": classroom,
+            "clientID": client_id,
         }
 
         headers = {"Authorization": f"Bearer {API_AUTH_TOKEN}"}

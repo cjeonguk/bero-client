@@ -34,6 +34,8 @@ RETRY_DELAY=1
 uv run src/main.py
 ```
 
+최초 실행 시 전송에 사용할 `clientID`를 입력합니다.
+
 서비스가 시작되면:
 1. BLE 스캐너가 자동으로 시작됩니다
 2. 감지된 BLE 장치의 정보가 설정된 API 서버로 전송됩니다
@@ -47,6 +49,6 @@ uv run src/main.py
     "rssi": -67,                        // 신호 강도 (dBm)
     "timestamp": "2024-03-14T17:12:54+09:00",  // 감지 시각
     "deviceName": "device1",
-    "classroom": "xxx"
+    "clientID": "xxx"
 }
 ```

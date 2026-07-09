@@ -20,18 +20,18 @@ if config_path.exists():
     with open(config_path, "r") as config_file:
         config = yaml.safe_load(config_file)
 
-    classroom = config["classroom"]
+    client_id = config["clientID"]
 
-    is_changed = input("교실 정보가 변경되었나요? (Y/n, 기본값: n): ")
+    is_changed = input("clientID가 변경되었나요? (Y/n, 기본값: n): ")
     if is_changed.lower() == "y":
-        classroom = input("설치된 교실 정보를 입력해주세요: ")
-        config = {"classroom": classroom}
+        client_id = input("설치된 clientID를 입력해주세요: ")
+        config = {"clientID": client_id}
         with open(config_path, "w") as config_file:
             yaml.dump(config, config_file, default_flow_style=False)
 
 else:
-    classroom = input("설치된 교실 정보를 입력해주세요: ")
-    config = {"classroom": classroom}
+    client_id = input("설치된 clientID를 입력해주세요: ")
+    config = {"clientID": client_id}
 
     with open(config_path, "w") as config_file:
         yaml.dump(config, config_file, default_flow_style=False)
@@ -79,7 +79,7 @@ class BLEScanner:
                                 device_name=device.name,
                                 device_id=str(tag_id),
                                 rssi=avg_rssi,
-                                classroom=classroom,
+                                client_id=client_id,
                             )
                         # pass
             except Exception as e:
